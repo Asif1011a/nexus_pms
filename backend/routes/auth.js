@@ -21,8 +21,8 @@ router.post('/login', async (req, res) => {
     const match = await user.comparePassword(password)
     if (!match) return res.status(401).json({ success: false, error: 'Invalid email or password.' })
 
-    user.lastLogin = new Date()
-    await user.save()
+    // Fire-and-forget the update to return response immediately
+    User.findByIdAndUpdate(user._id, { lastLogin: new Date() }).catch(err => console.error('Login update failed:', err))
 
     res.json({ success: true, token: signToken(user._id), user: user.toSafeObject() })
   } catch (err) {

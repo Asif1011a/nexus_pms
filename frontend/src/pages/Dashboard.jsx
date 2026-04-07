@@ -47,9 +47,18 @@ function ProgressBar({ value, color = 'bg-violet-500' }) {
 }
 
 export default function Dashboard() {
-  const { state, setCurrentPage } = useApp()
+  const { state, setCurrentPage, dataLoaded } = useApp()
   useRealTimeNotifications() // ← fires real-time team activity notifications
   const { projects, tasks, members, activities } = state
+
+  if (!dataLoaded) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 space-y-4">
+        <div className="w-12 h-12 border-4 border-violet-100 border-t-violet-600 rounded-full animate-spin" />
+        <p className="text-slate-400 text-sm font-medium animate-pulse">Syncing your workspace...</p>
+      </div>
+    )
+  }
 
   const totalProjects = projects.length
   const activeTasks = tasks.filter(t => t.status !== 'done').length
@@ -69,13 +78,13 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard title="Total Projects" value={totalProjects}
           subtitle={`${projects.filter(p => p.status === 'in-progress').length} active right now`}
-          accent="linear-gradient(90deg, #7c3aed, #a78bfa)" trend={12} />
+          accent="linear-gradient(90deg, #7c3aed, #a78bfa)" trend={0} />
         <StatCard title="Active Tasks" value={activeTasks}
           subtitle={`${inProgressCount} in progress`}
-          accent="linear-gradient(90deg, #2563eb, #60a5fa)" trend={-5} />
+          accent="linear-gradient(90deg, #2563eb, #60a5fa)" trend={0} />
         <StatCard title="Completed" value={completedTasks}
           subtitle={`${Math.round((completedTasks / Math.max(totalTasks,1)) * 100)}% completion rate`}
-          accent="linear-gradient(90deg, #059669, #34d399)" trend={8} />
+          accent="linear-gradient(90deg, #059669, #34d399)" trend={0} />
         <StatCard title="Team Size" value={totalMembers}
           subtitle="Across all projects"
           accent="linear-gradient(90deg, #d97706, #fbbf24)" trend={0} />

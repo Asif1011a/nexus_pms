@@ -31,13 +31,7 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false))
   }, [])
 
-  // Fetch all users whenever session changes (needed for admin pages + project member pickers)
-  useEffect(() => {
-    if (!session) { setUsers([]); return }
-    api.get('/users')
-      .then(data => setUsers((data.users || []).map(normalize)))
-      .catch(() => {})
-  }, [session?.id])
+  // Users are now fetched on-demand or by AppContext to reduce login latency
 
   const login = async (email, password) => {
     try {

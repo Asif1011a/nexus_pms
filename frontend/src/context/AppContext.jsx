@@ -73,6 +73,14 @@ export function AppProvider({ children }) {
     }
   }, [])
 
+  // Manual fetch for members if needed (e.g. from Team page)
+  const fetchUsers = useCallback(async () => {
+    try {
+      const uRes = await api.get('/users')
+      setState(s => ({ ...s, members: normList(uRes.users || []) }))
+    } catch (err) { console.error('Failed to fetch users:', err.message) }
+  }, [])
+
   useEffect(() => { loadAll() }, [loadAll])
 
   // ── Dispatch: mirrors the old reducer actions but calls the API ──────────────
@@ -173,10 +181,11 @@ export function AppProvider({ children }) {
     }
   }, [])
 
-  if (!dataLoaded) return null
+  // No longer blocking the whole app with return null
+  // This allows Sidebar/Header to show up immediately
 
   return (
-    <AppContext.Provider value={{ state, dispatch, currentPage, setCurrentPage }}>
+    <AppContext.Provider value={{ state, dispatch, currentPage, setCurrentPage, dataLoaded, fetchUsers }}>
       {children}
     </AppContext.Provider>
   )
