@@ -5,7 +5,7 @@ const { protect } = require('../middleware/auth')
 const { generateOTP, storeOTP, verifyOTP, clearOTP } = require('../utils/otp')
 
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' })
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
