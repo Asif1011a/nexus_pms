@@ -30,12 +30,27 @@ app.get('/api/health', (_, res) => res.json({ status: 'ok' }))
 // 404
 app.use((_, res) => res.status(404).json({ success: false, error: 'Route not found.' }))
 
-// Connect DB then start server
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
+// Connect DB then start server (Direct listen only in local dev)
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI)
     console.log('MongoDB connected')
-    app.listen(process.env.PORT, () =>
-      console.log(`Nexus backend running on http://localhost:${process.env.PORT}`)
-    )
-  })
-  .catch(err => { console.error('DB connection failed:', err.message); process.exit(1) })
+    
+    // Only listen if NOT running on Vercel (Production)
+    if (process.env.NODE_ENV !== 'production') {
+      const port = process.env.PORT || 5000
+      app.listen(port, () =>
+        console.log(`Nexus backend running locally on http://localhost:${port}`)
+      )
+    }
+  } catch (err) {
+    console.error('DB connection failed:', err.message)
+    // Don't exit in production/serverless, let it retry or fail gracefully
+    if (process.env.NODE_ENV !== 'production') process.exit(1)
+  }
+}
+
+connectDB()
+
+// Required for Vercel Serverless Functions
+module.exports = app
