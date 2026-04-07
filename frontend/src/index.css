@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Warm paper background with subtle dot grid ─────────── */
+.content-area {
+  background-color: #f6f5f2;
+  background-image: radial-gradient(circle, #d1cfc9 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Unique warm scrollbar (not the default gray) ──────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #c4b8a8;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: #a89880; }
+
+/* ── Editorial number display class ────────────────────── */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* ── Card hover: subtle upward lift + warm shadow ────────── */
+.card-lift {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(120, 100, 70, 0.12), 0 2px 8px -2px rgba(120, 100, 70, 0.08);
+}
+
+/* ── Sidebar noise texture overlay ─────────────────────── */
+.sidebar-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── Active sidebar nav: left accent bar, not a pill ─────── */
+.nav-active {
+  position: relative;
+  background: rgba(255,255,255,0.07);
+  border-radius: 10px;
+}
+.nav-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  background: #a78bfa;
+  border-radius: 0 3px 3px 0;
+}
+
+/* ── Mono numbers inside tables/stats ───────────────────── */
+.mono { font-family: 'DM Mono', 'Fira Code', monospace; }
+
+/* ── Subtle gradient on stat cards ──────────────────────── */
+.stat-card-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+}
+
+/* ── Page fade-in animation ─────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: fadeSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Shimmer on hover for project color strips ───────────── */
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+.color-strip:hover {
+  background-size: 200% auto;
+  animation: shimmer 1.2s linear infinite;
+}
+
+/* ── Range input styling ────────────────────────────────── */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border: 3px solid #7c3aed;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(124, 58, 237, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+}
+
+/* ── Tag / badge: slightly skewed for character ─────────── */
+.badge-skew {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* ── Underline link style (not generic violet) ───────────── */
+.link-underline {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.2s ease;
+}
+.link-underline:hover { background-size: 100% 1px; }
